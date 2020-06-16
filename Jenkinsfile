@@ -15,7 +15,7 @@ pipeline {
                 script{
 
                     def mavenPom = readMavenPom file: 'pom.xml'
-                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT")" : "smansh-app-release"
+                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT")"
                     
                  nexusArtifactUploader artifacts: [
                       [
@@ -30,7 +30,7 @@ pipeline {
                  nexusUrl: '192.168.43.186:8081', 
                  nexusVersion: 'nexus3', 
                  protocol: 'http', 
-                 repository: '${nexusRepoName}', 
+                 repository: 'smansh-app-release', 
                  version: '${mavenPom.version}'
                    
              }
