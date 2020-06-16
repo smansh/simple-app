@@ -3,14 +3,11 @@ pipeline {
     tools {
         maven 'Maven_home'
     }
-    options {
-        buildDiscarder logRotator(daysToKeepStr: '5', numToKeepStr: '7')
-    }
+    
     stages{
         stage('Build'){
             steps{
                  sh script: 'mvn clean package'
-                archiveArtifacts artifacts: 'target/*.war', onlyIfSuccessful: true
             }
         }
         stage('Upload War To Nexus'){
@@ -18,7 +15,7 @@ pipeline {
                 script{
 
                     def mavenPom = readMavenPom file: 'pom.xml'
-                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "simpleapp-snapshot" : "smansh-app-release"
+                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT")" : "smansh-app-release"
                     
                  nexusArtifactUploader artifacts: [
                       [
@@ -33,7 +30,7 @@ pipeline {
                  nexusUrl: '192.168.43.186:8081', 
                  nexusVersion: 'nexus3', 
                  protocol: 'http', 
-                 repository: 'nexusRepoName', 
+                 repository: '${nexusRepoName}', 
                  version: '${mavenPom.version}'
                    
              }
