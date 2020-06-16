@@ -3,20 +3,28 @@ pipeline {
     tools {
         maven 'Maven_home'
     }
-    
+    options {
+        buildDiscarder logRotator(daysToKeepStr: '5', numToKeepStr: '7')
+    }
     stages{
         stage('Build'){
             steps{
                  sh script: 'mvn clean package'
+                archiveArtifacts artifacts: 'target/*.war', onlyIfSuccessful: true
             }
         }
         stage('Upload War To Nexus'){
             steps{
+                script{
+
+                    def mavenPom = readMavenPom file: 'pom.xml'
+                    def nexusRepoName = mavenPom.version.endsWith("SNAPSHOT") ? "simpleapp-snapshot" : "smansh-app-release"
+                    
                  nexusArtifactUploader artifacts: [
                       [
                         artifactId: 'simple-app',
                         classifier: '', 
-                        file: 'target/simple-app-1.0.0.war', 
+                        file: "target/simple-app-${mavenPom.version}.war", 
                         type: 'war'
                       ]
                  ], 
@@ -24,10 +32,12 @@ pipeline {
                  groupId: 'in.javahome', 
                  nexusUrl: '192.168.43.186:8081', 
                  nexusVersion: 'nexus3', 
-                 protocol: 'http', repository: 'smansh-app-release', 
-                 version: '1.0.0'
+                 protocol: 'http', 
+                 repository: 'nexusRepoName', 
+                 version: '${mavenPom.version}'
                    
              }
    }
     }
+}
 }
