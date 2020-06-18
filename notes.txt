@@ -1,0 +1,4 @@
+#for dynamic read version,reposetory name from pom file using jenkins plugin
+#Pipeline Utility Steps	
+https://www.jenkins.io/doc/pipeline/steps/pipeline-utility-steps/#readmavenpom-read-a-maven-project-file
+def version = sh script: 'mvn help:evaluate -Dexpression=project.version -q -DforceStdout', returnStdout: true
