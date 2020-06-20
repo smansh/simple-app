@@ -34,7 +34,7 @@ pipeline {
                  nexusVersion: 'nexus3', 
                  protocol: 'http', 
                  repository: 'smansh-app-release', 
-                 version: '${mavenPom.version}'
+                 version: "${mavenPom.version}"
                  }  
              }
    }
